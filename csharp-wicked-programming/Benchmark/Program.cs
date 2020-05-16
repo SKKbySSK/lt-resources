@@ -32,9 +32,13 @@ namespace Benchmark
 
     class Program
     {
-        static void Main(string[] args)
+        static unsafe void Main(string[] args)
         {
-            Benchmark();
+            int x = 50;
+            int* ptr = &x; // xのポインタを取り出す
+            *ptr /= 2; // ポインタの指すデータを2で割る(50 / 2 = 25)
+
+            Console.WriteLine(x);
         }
 
         // 配列の要素数書き換えデモ

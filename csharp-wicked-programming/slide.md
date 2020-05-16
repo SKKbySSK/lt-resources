@@ -203,7 +203,7 @@ float[] converted = union.Float;
 - 境界チェックが狂う
   - 配列の長さを記録しているメモリが書き変わらないため
   - 無理やり書き換える方法は以下参照
-  [ArrayConversionTest.cs#L66-L82](https://github.com/SKKbySSK/lt-resources/blob/5d6a318e3bfa2bf9a905c4c2617ac481e74e53f4/csharp-wicked-programming/Benchmark/ArrayConversionTest.cs#L66-L82)
+  [ArrayConversionTest.cs#L68-L84](https://github.com/SKKbySSK/lt-resources/blob/yuru-lt-0.1.0/csharp-wicked-programming/Benchmark/ArrayConversionTest.cs#L68-L84)
 
 - 型情報も狂う
   - 同様に、型情報のメモリも書き変わらないため
@@ -221,6 +221,7 @@ float[] converted = union.Float;
 
 <!-- _class: lead invert --->
 ## ご清聴ありがとうございました！
+### 楽しいC#ライフを！
 
 
 <!--- 
