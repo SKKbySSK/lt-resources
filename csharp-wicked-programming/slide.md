@@ -3,7 +3,7 @@ marp: true
 theme: gaia
 class:
   - invert
-paginate: true
+paginate: false
 size: 4:3
 ---
 
@@ -24,12 +24,6 @@ size: 4:3
 - unsafe
 - fixed
 - GC
-
-
----
-
-<!-- _class: lead invert --->
-# 高速な配列変換
 
 ---
 
@@ -96,19 +90,21 @@ fixed (byte* sourcePtr = source)
 
 ## 結果
 - BenchmarkDotNetを使って測定
-  - [ArrayConversionTest.cs](Benchmark/ArrayConversionTest.cs)
+  - [ArrayConversionTest.cs](https://github.com/SKKbySSK/lt-resources/blob/5d6a318e3bfa2bf9a905c4c2617ac481e74e53f4/csharp-wicked-programming/Benchmark/ArrayConversionTest.cs)
 
- 方法 |          平均 |
-------- |--------------:|
- 単純な変換 | 1,517.8060 ns |
- unsafeによる変換 | 1,074.6857 ns |
+ Method |          平均 |
+------- |---------------|
+ 単純な変換 | 1,534.6059 ns |
+ unsafeによる変換 |   783.1249 ns |
+
 
 <!--- _footer: ※ 変換前データを初期化する時間は含んでいません --->
 
 ---
 
-## まぁ早くなったけど・・・
-- `fixed`に時間がかかる
+<!-- _class: lead invert --->
+## 早いぞ！でも・・・
+- メモリの固定や確保によるオーバーヘッド
 - 変換後のデータ格納用配列が余計にメモリ喰う
 
 ---
@@ -119,11 +115,12 @@ fixed (byte* sourcePtr = source)
 ---
 
 <!-- _class: lead invert --->
-#### 構造体を使おう！
+## 構造体を使おう！
 
 ---
 
-#### 構造体
+<!-- _class: lead invert --->
+## 構造体
 - C#では構造体のメモリ構造を指定できる
   - Cの`union`みたいなことができる
 - `StructLayout`と`FieldOffset`属性を組み合わせる
@@ -153,8 +150,9 @@ Console.WriteLine(data.B); // 187(0xBB)
 
 ---
 
-#### メモリレイアウト
-![](sample-struct-layout.png)
+<!-- _class: lead invert --->
+メモリレイアウト
+![bg right 70%](sample-struct-layout.png)
 
 ---
 
@@ -188,35 +186,44 @@ float[] converted = union.Float;
 ## 結果
 - 測定条件は前回と同じ
 
- 方法 |          平均 |
-------- |--------------:|
- 単純な変換 | 1,517.8060 ns |
- unsafeによる変換 | 1,074.6857 ns |
-  Unionもどきによる変換 |     0.6836 ns |
+ Method |          平均 |
+------- |---------------|
+ 単純な変換 | 1,534.6059 ns |
+ unsafeによる変換 |   783.1249 ns |
+  **Unionもどきによる変換** |     **0.9233 ns** |
 
 ---
 
-## 結果
-- 測定条件は前回と同じ
-
- 方法 |          平均 |
-------- |--------------:|
- 単純な変換 | 1,517.8060 ns |
- unsafeによる変換 | 1,074.6857 ns |
-  **Unionもどきによる変換** |     0.6836 ns |
-
-#### 圧倒的パフォーマンス！！
+<!-- _class: lead invert --->
+## 圧倒的パフォーマンス！！
 
 ---
 
 ## Unionもどきの注意点
 - 境界チェックが狂う
   - 配列の長さを記録しているメモリが書き変わらないため
+  - 無理やり書き換える方法は以下参照
+  [ArrayConversionTest.cs#L66-L82](https://github.com/SKKbySSK/lt-resources/blob/5d6a318e3bfa2bf9a905c4c2617ac481e74e53f4/csharp-wicked-programming/Benchmark/ArrayConversionTest.cs#L66-L82)
+
 - 型情報も狂う
   - 同様に、型情報のメモリも書き変わらないため
 
 ---
 
+<!-- _class: lead invert --->
+# 用量・用法はほどほどに
+- 可読性がとても悪い
+- メモリを意識する必要がある
+- オーディオプロセッシング等ではかなり便利
+- **単純な変換方法でも十分早い**
+
+---
+
+<!-- _class: lead invert --->
+## ご清聴ありがとうございました！
+
+
+<!--- 
 ## 制約
 - Managed型のポインタは取れない
   - GCによりアドレスが実行中に変化するため
@@ -224,10 +231,7 @@ float[] converted = union.Float;
   | Managed | Unmanaged |
   | --- | --- |
   | class | int, float等 |
-  |       | struct※ |
+  |       | struct |
   |       | enum   |
 
-<!--- _footer: struct※ : managed型を含まない場合のみunmanaged --->
-
----
-
+--->

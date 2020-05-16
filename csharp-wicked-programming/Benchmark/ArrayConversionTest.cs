@@ -47,21 +47,54 @@ namespace Benchmark
         }
 
         [Benchmark]
-        public unsafe void Union()
+        public void Union()
+        {
+            UnionArray union = new UnionArray()
+            {
+                Byte = array
+            };
+            float[] converted = union.Float;
+        }
+
+        public unsafe void UnionModifiedLength()
         {
             UnionArray union = new UnionArray()
             {
                 Byte = array
             };
 
-            return;
-            // https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-3-the-layout-of-a-managed-array-3/
-            fixed (byte* ptr = union.Byte)
+            Console.WriteLine($"Before : {union.Byte.Length}");
+
+            // 配列の要素数を書き換えるコード
+            // 1024の配列の長さを256に書き換える
+            // ref https://devblogs.microsoft.com/premier-developer/managed-object-internals-part-3-the-layout-of-a-managed-array-3/
+            fixed (byte* ptr = array)
             {
-                // 64bitでは8バイト、32bitでは4バイトで配列の長さが記録されている
-                var lengthDelta = Environment.Is64BitProcess ? 8 : 4;
-                var lengthPtr = (long*)(ptr - lengthDelta);
-                *lengthPtr = union.Float.Length / 4;
+                // 64bitでは先頭要素の8バイト前、32bitでは4バイト前に配列の長さが記録されている
+                if (Environment.Is64BitProcess)
+                {
+                    var lengthPtr = (long*)(ptr - 8);
+                    *lengthPtr = union.Float.Length / 4;
+                }
+                else
+                {
+                    var lengthPtr = (long*)(ptr - 4);
+                    *lengthPtr = union.Float.Length / 4;
+                }
+            }
+
+            Console.WriteLine($"After : {union.Byte.Length}");
+
+            // IndexOutOfRangeExceptionが発生すれば、Floatでの境界チェックが正しく動作している
+            try
+            {
+                Console.Write("Range Check : ");
+                var error = union.Float[union.Float.Length];
+                Console.WriteLine("Failed");
+            }
+            catch(IndexOutOfRangeException)
+            {
+                Console.WriteLine("OK");
             }
         }
     }

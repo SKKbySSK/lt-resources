@@ -19,29 +19,43 @@ namespace Benchmark
         public byte B;
     }
 
+    class CustomConfig : ManualConfig
+    {
+        public CustomConfig()
+        {
+            AddExporter(MarkdownExporter.Default);
+            AddValidator(JitOptimizationsValidator.DontFailOnError);
+            AddLogger(ConsoleLogger.Default);
+            AddColumnProvider(DefaultColumnProviders.Instance);
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+            Benchmark();
+        }
+
+        // 配列の要素数書き換えデモ
+        private static void UnionModifiedTest()
+        {
+            var test = new ArrayConversionTest();
+            test.UnionModifiedLength();
+        }
+
+        // 各変換方法のベンチマーク
+        private static void Benchmark()
+        {
             BenchmarkRunner.Run<ArrayConversionTest>(new CustomConfig());
         }
 
+        // SampleStructのデモ
         private static void SampleStruct()
         {
             SampleStruct data = new SampleStruct();
             data.A = 0xDDCCBBAA;
             Console.WriteLine(data.B);
-        }
-
-        private class CustomConfig : ManualConfig
-        {
-            public CustomConfig()
-            {
-                AddExporter(MarkdownExporter.Default);
-                AddValidator(JitOptimizationsValidator.DontFailOnError);
-                AddLogger(ConsoleLogger.Default);
-                AddColumnProvider(DefaultColumnProviders.Instance);
-            }
         }
     }
 }
