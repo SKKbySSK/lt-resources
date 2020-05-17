@@ -28,7 +28,7 @@ size: 4:3
 ---
 
 ## `unsafe`とは？
-- C#でポインタ操作を可能にする
+- C#の一部の型でポインタ操作を可能にする
 ```
 int x = 50;
 int* ptr = &x; // xのポインタを取り出す
@@ -43,6 +43,7 @@ Output
 
 ---
 
+<!-- _class: lead invert --->
 ## 今回やること
 byte[]をfloat[]へ変換する
 
@@ -88,17 +89,15 @@ fixed (byte* sourcePtr = source)
 
 ---
 
+<!-- _class: lead invert --->
 ## 結果
-- BenchmarkDotNetを使って測定
-  - [ArrayConversionTest.cs](https://github.com/SKKbySSK/lt-resources/blob/5d6a318e3bfa2bf9a905c4c2617ac481e74e53f4/csharp-wicked-programming/Benchmark/ArrayConversionTest.cs)
-
- Method |          平均 |
-------- |---------------|
+ 方法 |          平均 |
+------- |---------------:|
  単純な変換 | 1,534.6059 ns |
  unsafeによる変換 |   783.1249 ns |
 
 
-<!--- _footer: ※ 変換前データを初期化する時間は含んでいません --->
+<!--- _footer: BenchmarkDotNetを使って測定 --->
 
 ---
 
@@ -110,7 +109,7 @@ fixed (byte* sourcePtr = source)
 ---
 
 <!-- _class: lead invert --->
-#### byte配列をfloat配列として使えばええやん
+#### byte[]をfloat[]として使えばええやん
 
 ---
 
@@ -184,13 +183,15 @@ float[] converted = union.Float;
 ---
 
 ## 結果
-- 測定条件は前回と同じ
 
- Method |          平均 |
-------- |---------------|
+<!-- _class: lead invert --->
+ 方法 |          平均 |
+------- |---------------:|
  単純な変換 | 1,534.6059 ns |
  unsafeによる変換 |   783.1249 ns |
   **Unionもどきによる変換** |     **0.9233 ns** |
+
+<!--- _footer: 測定条件は前回と同じ --->
 
 ---
 

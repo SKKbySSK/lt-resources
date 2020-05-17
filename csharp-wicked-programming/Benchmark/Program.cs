@@ -34,11 +34,7 @@ namespace Benchmark
     {
         static unsafe void Main(string[] args)
         {
-            int x = 50;
-            int* ptr = &x; // xのポインタを取り出す
-            *ptr /= 2; // ポインタの指すデータを2で割る(50 / 2 = 25)
-
-            Console.WriteLine(x);
+            Console.WriteLine("UnionModifiedTestやBenchmarkを呼び出してください");
         }
 
         // 配列の要素数書き換えデモ

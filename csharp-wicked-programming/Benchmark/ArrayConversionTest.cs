@@ -78,7 +78,7 @@ namespace Benchmark
                 }
                 else
                 {
-                    var lengthPtr = (long*)(ptr - 4);
+                    var lengthPtr = (int*)(ptr - 4);
                     *lengthPtr = union.Float.Length / 4;
                 }
             }
